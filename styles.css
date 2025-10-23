@@ -1,0 +1,154 @@
+/* ======== TEMA (HSL) =========
+   Chicos: con estas variables podemos cambiar TODO el color del sitio.
+   --h = tono (0–360), --s = saturación, --l = luminosidad.
+   Ventaja: HSL es muy intuitivo para crear paletas vivas.
+*/
+:root{
+  --h: 330;    /* Tono base (330 = fucsia alegre) */
+  --s: 85%;    /* Saturación intensa */
+  --l: 50%;    /* Luminosidad media */
+
+  /* Derivados válidos (sin símbolos + o - en el nombre) */
+  --h-minus-20: calc(var(--h) - 20); /* más hacia magenta */
+  --h-plus-20:  calc(var(--h) + 20); /* más hacia violeta */
+  --l-hover: 45%;
+  --l-soft: 96%;
+  --txt-strong: hsl(var(--h), 25%, 15%);
+  --txt-soft:   hsl(var(--h), 15%, 35%);
+
+  /* Colores “marca” principales basados en HSL */
+  --brand:        hsl(var(--h), var(--s), var(--l));
+  --brand-weak:   hsl(var(--h-plus-20), 50%, 60%);
+  --brand-strong: hsl(var(--h-minus-20), var(--s), var(--l));
+  --brand-bg:     hsl(var(--h), 40%, var(--l-soft));
+}
+
+/* (Opcional) Dark mode automático según el sistema */
+@media (prefers-color-scheme: dark){
+  :root{
+    --l: 60%;
+    --l-soft: 14%;
+    --txt-strong: hsl(var(--h), 25%, 92%);
+    --txt-soft:   hsl(var(--h), 15%, 78%);
+  }
+}
+
+
+* { box-sizing: border-box; }
+body {
+  margin: 16px;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/*palabra clave (keyword)*/
+h1 {
+  color: blue;
+  border-bottom: 4px solid currentColor; /* usa el mismo color del texto */
+}
+
+h2 { color: rgb(40, 85, 197); }
+
+p {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  color: rgb(80, 80, 80);
+}
+
+li { color: hsl(0, 64%, 57%); }
+
+th { color: hsl(30, 100%, 50%); }
+
+td { color: hsl(120, 100%, 25%); }
+
+a {
+  color: hsl(240, 100%, 50%);
+  border-bottom: 2px solid currentColor; /* <-- corregido: faltaban : y solid */
+  text-decoration: none;
+}
+a:hover { color: #00990a; }
+
+/* Sugerencia opcional para que la imagen de la card no se deforme */
+.object-fit-cover { object-fit: cover; }
+
+/* ====== Botón flotante WhatsApp ======
+   Chicos: position: fixed lo “pega” a la ventana, no al contenido. */
+.whatsapp-float {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  bottom: 20px;     /* Distancia desde abajo */
+  right: 20px;      /* Distancia desde la derecha */
+  background-color: #25d366; /* Verde WhatsApp */
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;  /* Tamaño del ícono */
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.25);
+  z-index: 1055;    /* Más alto que navbar/carrusel */
+  text-decoration: none;
+  transition: transform .2s ease, background-color .2s ease, opacity .2s ease;
+
+  /* Chicos: por defecto lo ocultamos; se muestra al hacer scroll */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  pointer-events: none;
+}
+
+/* Estado visible al hacer scroll */
+.whatsapp-float.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Hover/focus: efecto de ampliación */
+.whatsapp-float:hover,
+.whatsapp-float:focus {
+  background-color: #20b954;
+  transform: scale(1.08);
+  outline: none;
+}
+
+/* Evitamos que el botón tape el footer en pantallas pequeñas */
+@media (max-width: 575.98px) {
+  footer { padding-bottom: 84px; } /* 60px botón + 24px aire */
+}
+
+/* Accesibilidad: menos movimiento si el usuario lo prefiere */
+@media (prefers-reduced-motion: reduce) {
+  .whatsapp-float { transition: none; }
+}
+
+/* ===== Hook mínimo para que el tema HSL se vea ===== */
+
+/* 1) Fondo y texto global con el tema */
+body{
+  background: var(--brand-bg);
+  color: var(--txt-strong);
+  transition: background-color .3s ease, color .2s ease;
+}
+
+/* 2) Enlaces usando la marca HSL */
+a{
+  color: var(--brand);
+  border-bottom: 2px solid currentColor;
+  text-decoration: none;
+  transition: color .2s ease, border-color .2s ease;
+}
+a:hover{
+  color: hsl(var(--h-plus-20), var(--s), var(--l-hover));
+}
+
+/* 3) Banner con degradado HSL (se impone sobre .bg-dark por tener #id y venir después) */
+#banner{
+  background: linear-gradient(
+    135deg,
+    hsl(var(--h-minus-20), 85%, 50%),
+    hsl(var(--h-plus-20), 85%, 60%)
+  );
+  color: #fff;
+}
